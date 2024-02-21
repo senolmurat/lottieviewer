@@ -223,7 +223,7 @@ function foo() {
 
     cell.innerHTML += (`
     <lottie-player src="${data[i].source}" background="transparent" speed="1" style="width: 300px; height: 300px"
-    direction="1" mode="normal" loop controls autoplay></lottie-player>
+    direction="1" mode="normal" autoplay="false" hover="true" loop controls autoplay></lottie-player>
     <span class="title">${data[i].title}</span>
     <span class="title">${fileName}</span>`)
 
