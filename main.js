@@ -1,7 +1,7 @@
 const data = [
   {
     "title": "Reject Super Loan",
-    "source": "lotties/rejectsuperloan.json"
+    "source": "lotties/reject_super_loan.json"
   },
   {
     "title": "Birthday",
