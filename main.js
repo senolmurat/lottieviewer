@@ -218,12 +218,22 @@ function foo() {
 
   for (let i = 0; i < data.length; i++) {
     const cell = document.createElement('div');
+    cell.className = " cell"
 
     const fileName = data[i].source.split("/").pop(); 
 
     cell.innerHTML += (`
-    <lottie-player src="${data[i].source}" background="transparent" speed="1" style="width: 300px; height: 300px"
-    direction="1" mode="normal" hover></lottie-player>
+    <lottie-player 
+      src="${data[i].source}" 
+      background="transparent" 
+      speed="1" 
+      style="height: 300px"
+      direction="1" 
+      mode="normal"
+      loop
+      hover
+      intermission="1000">
+    </lottie-player>
     <span class="title">${data[i].title}</span>
     <span class="title">${fileName}</span>`)
 
