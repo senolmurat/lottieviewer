@@ -4,6 +4,8 @@ Initially made as an internal tool to browse and match the lottie animation file
 
 A minimalist web application to browse, search, and preview Lottie animations stored in your project. The app provides a streamlined search experience, hover and autoplay modes, and easy download for each animation.
 
+<img src="https://github.com/senolmurat/lottieviewer/blob/main/resources/demo.gif" width="540" height="239" />
+
 ## Features
 - Responsive web UI built with HTML and Tailwind CSS
 - Search and filter Lottie animations by file name
