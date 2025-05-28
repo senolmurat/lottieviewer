@@ -1,5 +1,7 @@
 # Lottie Viewer
 
+Initially made as an internal tool to browse and match the lottie animation files between iOS and Android teams and I decided to share it.
+
 A minimalist web application to browse, search, and preview Lottie animations stored in your project. The app provides a streamlined search experience, hover and autoplay modes, and easy download for each animation.
 
 ## Features
