@@ -6,6 +6,8 @@ A minimalist web application to browse, search, and preview Lottie animations st
 
 <img src="https://github.com/senolmurat/lottieviewer/blob/main/resources/demo.gif" width="540" height="239" />
 
+Try it on [github.io](https://senolmurat.github.io/lottieviewer/)
+
 ## Features
 - Responsive web UI built with HTML and Tailwind CSS
 - Search and filter Lottie animations by file name
