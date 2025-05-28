@@ -1,18 +1,159 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>Lottie Player</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-  <script src='main.js'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist Lottie Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        .lottie-card {
+            transition: all 0.2s ease;
+        }
+        .lottie-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+    </style>
 </head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Lottie Viewer</h1>
+            <p class="text-gray-600">Browse and search Lottie animations</p>
+            
+            <!-- Autoplay/Hover Switch -->
+            <div class="flex items-center mt-4 mb-2">
+                <span class="mr-2 text-sm text-gray-700">Play on Hover</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="playModeSwitch" class="sr-only peer" checked>
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition"></div>
+                  <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div>
+                </label>
+                <span class="ml-2 text-sm text-gray-700">Autoplay</span>
+            </div>
 
-<body onload="foo()">
-  <div class="root"></div>
+            <div class="mt-6 relative max-w-md">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search Lotties..." 
+                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                >
+            </div>
+        </header>
+
+        <div id="loading" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <p class="mt-2 text-gray-600">Loading Lotties...</p>
+        </div>
+
+        <div id="lottieGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Lottie cards will be inserted here -->
+        </div>
+
+        <div id="noResults" class="hidden text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="mt-2 text-lg font-medium text-gray-900">No results found</h3>
+            <p class="mt-1 text-gray-500">Try adjusting your search query</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const searchInput = document.getElementById('searchInput');
+            const lottieGrid = document.getElementById('lottieGrid');
+            const loading = document.getElementById('loading');
+            const noResults = document.getElementById('noResults');
+            const playModeSwitch = document.getElementById('playModeSwitch');
+            let playOnHover = false;
+
+            // Fetch Lottie files from the 'lotties' folder using manifest.json
+            async function fetchLotties() {
+                const response = await fetch('manifest.json');
+                const lottieFiles = await response.json();
+                return lottieFiles.map(file => ({
+                    name: file.replace(/\.json$/, ''),
+                    path: `lotties/${file}`
+                }));
+            }
+
+            // Show loading spinner
+            loading.style.display = '';
+            const lotties = await fetchLotties();
+            loading.style.display = 'none';
+            renderLotties(lotties);
+
+            playModeSwitch.addEventListener('change', function() {
+                playOnHover = !this.checked;
+                renderLotties(filteredLotties());
+            });
+
+            // Helper to get filtered lotties based on search
+            function filteredLotties() {
+                const searchTerm = searchInput.value.toLowerCase();
+                return lotties.filter(lottie => lottie.name.toLowerCase().includes(searchTerm));
+            }
+
+            // Render Lottie animations in grid
+            function renderLotties(lottiesToRender) {
+                lottieGrid.innerHTML = '';
+                if (lottiesToRender.length === 0) {
+                    noResults.classList.remove('hidden');
+                    return;
+                }
+                noResults.classList.add('hidden');
+                lottiesToRender.forEach(lottie => {
+                    const card = document.createElement('div');
+                    card.className = 'lottie-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg';
+                    const lottieId = `lottie-player-${lottie.name}`;
+                    card.innerHTML = `
+                        <div class="p-4 h-48 flex items-center justify-center">
+                            <lottie-player 
+                                id="${lottieId}"
+                                src="${lottie.path}" 
+                                background="transparent" 
+                                speed="1" 
+                                loop 
+                                ${playOnHover ? '' : 'autoplay'}
+                                intermission="500"
+                                style="width: 100%; height: 100%;"
+                            ></lottie-player>
+                        </div>
+                        <div class="px-4 py-3 border-t border-gray-100">
+                            <h3 class="font-medium text-gray-800 truncate">${lottie.name}</h3>
+                            <div class="mt-1 flex justify-between items-center">
+                                <span class="text-xs text-gray-500">Lottie</span>
+                                <a href="${lottie.path}" download class="text-blue-500 hover:text-blue-700 text-sm font-medium">Download</a>
+                            </div>
+                        </div>
+                    `;
+                    lottieGrid.appendChild(card);
+
+                    if (playOnHover) {
+                        const lottiePlayer = card.querySelector('lottie-player');
+                        lottiePlayer.addEventListener('mouseenter', () => lottiePlayer.play());
+                        lottiePlayer.addEventListener('mouseleave', () => lottiePlayer.stop());
+                    }
+                });
+            }
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                renderLotties(filteredLotties());
+            });
+        });
+    </script>
 </body>
-
 </html>

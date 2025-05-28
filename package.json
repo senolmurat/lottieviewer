@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "prestart": "node lotties/generate_manifest.js",
+    "prebuild": "node lotties/generate_manifest.js",
+    "start": "npx serve .",
+    "build": "echo 'No build step defined'"
+  }
+} 
