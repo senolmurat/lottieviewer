@@ -32,13 +32,13 @@ A minimalist web application to browse, search, and preview Lottie animations st
    npm start
    ```
    This will:
-   - Automatically generate or update `lotties/manifest.json` with all Lottie files in the folder
+   - Automatically generate or update `/manifest.json` with all Lottie files in the folder
    - Serve the site locally (default: http://localhost:3000 or as shown in your terminal)
 
 ### Scripts
 - `npm start` — Runs the static server and updates the manifest
 - `npm run build` — (No build step by default, but will update the manifest)
-- `node generate_manifest.js` — Manually regenerate the manifest if needed
+- `node generate_manifest.js` — Manually regenerate the manifest if needed - or run as prestart/prebuild script
 
 ## Project Structure
 ```
