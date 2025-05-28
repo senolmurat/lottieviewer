@@ -25,10 +25,6 @@ A minimalist web application to browse, search, and preview Lottie animations st
 
 ### Installation & Usage
 1. **Clone the repository:**
-   ```sh
-   git clone <your-repo-url>
-   cd <your-repo>
-   ```
 2. **Add your Lottie JSON files:**
    Place your `.json` Lottie files in the `lotties/` directory.
 3. **Start the server:**
